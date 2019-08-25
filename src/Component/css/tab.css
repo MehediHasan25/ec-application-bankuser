@@ -1,0 +1,13 @@
+/* .card:hover{
+    background-color: #56c9ef;
+    color:#ffffff;
+} */
+#fingerprint:hover{
+    background-color: #56c9ef;
+    color:#ffffff;
+}
+
+#facedetection:hover{
+    background-color: #78c2ad;
+    color:#ffffff;
+}

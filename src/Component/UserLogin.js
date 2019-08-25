@@ -27,7 +27,8 @@ class UserLogin extends Component {
              cookie.setCookie('x-auth-token', token , 120);
              cookie.setCookie('userStatus', userStatus, 120);
              cookie.setCookie('userType', userType, 120);
-             this.props.history.replace('/userform');
+             cookie.setCookie('username', username, 120);
+             this.props.history.replace('/dashboard');
          })
          .catch(err=> {
             if (err.response) {
@@ -58,7 +59,6 @@ class UserLogin extends Component {
      onChangeUsername = e => this.setState({ username: e.target.value});
      onChangePassword = e => this.setState({ password: e.target.value});
     render() { 
-       
         return ( 
             <div>
                 <nav className="navbar fixed-top navbar-expand-md navbar-light shadow" style={{ backgroundColor: "#56c9ef" }}>

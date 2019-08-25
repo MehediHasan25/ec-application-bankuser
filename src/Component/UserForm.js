@@ -136,6 +136,8 @@ class UserForm extends Component {
       }
     };
 
+  
+
     const fingerobj = {
       MinQ: 30,
       Retry: 3,
@@ -217,6 +219,15 @@ class UserForm extends Component {
       // console.log(ex);
     }
   };
+
+  logout = e =>{
+    cookie.setCookie('x-auth-token', "", -1);
+    cookie.setCookie('username', '', -1);
+    cookie.setCookie('userStatus', '', -1);
+    cookie.setCookie('userType', "", -1);
+} 
+
+
   onChangeFatherName = e => this.setState({ fatherName: e.target.value });
   onChangeMotherName = e => this.setState({ motherName: e.target.value });
   onChangePob = e => this.setState({ pob: e.target.value });
@@ -249,6 +260,7 @@ class UserForm extends Component {
   };
 
   render() {
+    let cookieName = cookie.getCookie('username');
     return (
       <div>
         <nav
@@ -257,7 +269,7 @@ class UserForm extends Component {
         >
           <Link to="#" className="navbar-brand" style={{ color: "#ffffff" }}>
             <i className="fab fa-bandcamp" />
-            &nbsp;&nbsp; Brand
+            &nbsp;&nbsp; Branch User
           </Link>
           <button
             type="button"
@@ -269,7 +281,7 @@ class UserForm extends Component {
           </button>
 
           <div className="collapse navbar-collapse" id="navbarCollapse">
-            <div className="navbar-nav">
+            {/* <div className="navbar-nav">
               <Link
                 to="#"
                 className="nav-item nav-link"
@@ -303,7 +315,7 @@ class UserForm extends Component {
                 <i className="fab fa-readme" />
                 &nbsp; Reports
               </Link>
-            </div>
+            </div> */}
             <div className="navbar-nav ml-auto">
               <Link
                 to="#"
@@ -311,11 +323,12 @@ class UserForm extends Component {
                 style={{ color: "#ffffff" }}
               >
                 <i className="fas fa-user" />
-                &nbsp; Welcome, Demo
+                &nbsp; Welcome, {cookieName}
               </Link>
               <Link
-                to="#"
+                to="/"
                 className="nav-item nav-link"
+                onClick={this.logout}
                 style={{ color: "#ffffff" }}
               >
                 <i className="fas fa-sign-out-alt" />
@@ -325,7 +338,7 @@ class UserForm extends Component {
           </div>
         </nav>
 
-        <div className="sidebar shadow" style={{ backgroundColor: "#8f8e8e" }}>
+        {/* <div className="sidebar shadow" style={{ backgroundColor: "#8f8e8e" }}>
           <Link className="active" to="#home">
             Home &nbsp;&nbsp;
             <i className="fas fa-home" />
@@ -358,6 +371,25 @@ class UserForm extends Component {
             About &nbsp;&nbsp;
             <i className="fas fa-eject" />
           </Link>
+        </div> */}
+          <div className="sidebar shadow" style={{ backgroundColor: "#8f8e8e" }}>
+          <Link className="active" to="/dashboard">
+            Home &nbsp;&nbsp;
+            <i className="fas fa-home" />
+          </Link>
+          <Link to="/userform">
+            Verify Customer &nbsp;&nbsp;
+            <i className="fas fa-newspaper" />
+          </Link>
+          <Link to="/pending-list">
+            Pending List &nbsp;&nbsp;
+            <i className="fas fa-id-badge" />
+          </Link>
+          <Link to="#about">
+            Verification History &nbsp;&nbsp;
+            <i className="fas fa-eject" />
+          </Link>
+          
         </div>
 
         <div className="content">
