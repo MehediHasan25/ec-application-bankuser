@@ -411,6 +411,10 @@ class UserForm extends Component {
             Verification History &nbsp;&nbsp;
             <i className="fas fa-eject" />
           </Link>
+          <Link to="/search-user-nid">
+                Search By Nid  &nbsp;&nbsp;
+                <i className="fas fa-eject" />
+              </Link>
           
         </div>
 

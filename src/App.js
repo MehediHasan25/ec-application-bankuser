@@ -6,6 +6,8 @@ import UserForm from './Component/UserForm';
 import Dashboard from './Component/Dashboard';
 import PendingList from './Component/PendingList';
 import KycHistory from './Component/KycHistory';
+import SearchNid from './Component/SearchNid';
+
 
 
 
@@ -23,6 +25,7 @@ class App extends Component {
         <Route exact path="/dashboard" component={Dashboard} />
         <Route exact path="/pending-list" component={PendingList} />
         <Route exact path="/show-kyc-history" component={KycHistory} />
+        <Route exact path="/search-user-nid" component={SearchNid} />
         </Switch>
       </div>
     </Router>

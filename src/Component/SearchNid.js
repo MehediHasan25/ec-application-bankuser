@@ -1,31 +1,38 @@
 import React, { Component } from 'react';
 import { Link } from "react-router-dom";
-import axios from 'axios';
-import {kycHistory} from '../Url/User';
+import {searchUserNid} from '../Url/User';
 import "./css/table.css";
+import axios from "axios";
 import cookie from "../Utils/cookie";
 
 
-class KycHistory extends Component {
+
+class SearchNid extends Component {
     state = { 
-        historyData:[],
-        page:1
+        nidNo:'',
+        searchNidData: []
      }
 
-     componentDidMount() {
-        const config = {
-          headers: {
-            "x-auth-token": cookie.getCookie("x-auth-token")
-          }
-        };
-        axios
-          .post(kycHistory,this.state.page,config)
-          .then(res => {
-            console.log(res.data.ekyc);
-            
-            this.setState({ historyData: res.data.ekyc });
-          })
-          .catch(err => {
+     onSubmit = e =>{
+         e.preventDefault();
+         
+         const { nidNo } = this.state;
+
+         const config = {
+           headers: {
+             "x-auth-token": cookie.getCookie("x-auth-token")
+           }
+         };
+
+         const obj={
+            nidNo
+         };
+
+         axios.post(searchUserNid, obj, config )
+         .then(res =>{
+             console.log(res);
+         })
+         .catch(err => {
             if (err.response) {
               if (err.response.status === 400 || err.response.status === 401) {
                 console.log(err.response.data);
@@ -43,59 +50,76 @@ class KycHistory extends Component {
               alert(err.message);
             }
           });
-      }
+     }
 
-      logout = e =>{
+     onChangeSearchNid = e => this.setState({nidNumber: e.target.value});
+
+     logout = e =>{
         cookie.setCookie('x-auth-token', "", -1);
         cookie.setCookie('username', '', -1);
         cookie.setCookie('userStatus', '', -1);
         cookie.setCookie('userType', "", -1);
     } 
 
-    renderTableData() {
-        return this.state.historyData.map((historyData, index) => {
-          // console.log(data.createDate);
-          //  const nidFormat= dateFormatConverter.getNidFormat(data.createDate);
-          // console.log(nidFormat);
-          const {
-            _id,
-            name,
-            fatherName,
-            motherName,
-            nidNo,
-            dob,
-            pob,
-            bloodGroup,
-            address,
-            issueDate,
-            ecVerificationStatus,
-            createDate,
-            createdBy     
-          } = historyData; //destructuring
-        
-          return (
-            <tr key={_id}>
-              <td>{name}</td>
-              <td>{fatherName}</td>
-              <td>{motherName}</td>
-              <td>{nidNo}</td>
-              <td>{dob}</td>
-              <td>{pob}</td>
-              <td>{bloodGroup}</td>
-              <td>{address}</td>  
-              <td>{issueDate}</td>
-              <td>{ecVerificationStatus}</td>  
-              <td>{new Date(createDate).toLocaleDateString() + " - " + new Date(createDate).toLocaleTimeString()}</td>
-              <td>{createdBy}</td>
-              
-            </tr>
-          );
-        });
-      }
-
-
     render() { 
         let cookieName = cookie.getCookie('username');
+        const nidSearchData= (
+            <div className="container" style={{ backgroundColor: "#f7f7f7" }}>
+              <div
+                className="d-flex align-items-center card border-light mb-3"
+                style={{ backgroundColor: "#f7f7f7" }}
+              >
+                <div
+                  className="col-sm-5 shadow p-3 mb-2"
+                  style={{
+                    backgroundColor: "#8f8e8e",
+                    color: "#fff",
+                    textAlign: "center",
+                    marginTop: "15px"
+                  }}
+                >
+                  <i className="fas fa-certificate" />
+                  &nbsp;Search User
+                </div>
+                <div className="card-body col-sm-5">
+                  <form onSubmit={this.onSubmit}>
+                    <div className="form-group">
+                      <input
+                        type="text"
+                        onChange={this.onChangeSearchNid}
+                        className="form-control"
+                        id="name"
+                        placeholder="Nid No"
+                      />
+                    </div>
+      
+                    <br />
+      
+                    {/* <div className="form-group">
+                                  <label htmlFor="exampleInputFile">Provide NID Image</label>
+                                  <input type="file" className="form-control-file" id="exampleInputFile" aria-describedby="fileHelp"></input>
+                                  <br />
+      
+                              </div> */}
+      
+                    <button
+                      type="submit"
+                      className="btn shadow "
+                      style={{
+                        backgroundColor: "#3ed6a6",
+                        color: "#fff",
+                        float: "right"
+                      }}
+                    >
+                      <i className="fas fa-check-circle" />
+                      &nbsp; Search
+                    </button>
+                    <br />
+                  </form>
+                </div>
+              </div>
+            </div>
+          );
         return ( 
             <div>
             <nav
@@ -165,27 +189,7 @@ class KycHistory extends Component {
             <div className="content">
               <div className="row ">
                 {/* Start Content*/}
-                <h1 className="">Verified Kyc History</h1>
-            <table id="data" className=""style={{fontSize:'11pt'}}>
-              <thead>
-                <tr>
-                  <th>Name</th>
-                  <th>Father Name</th>
-                  <th>Mother Name</th>
-                  <th>Nid No</th>
-                  <th>Date of Birth</th>
-                  <th>Place of Birth</th>
-                  <th>Blood Group</th>
-                  <th>Address</th>
-                  <th>Issue Date</th>
-                  <th>ecVerificationStatus</th>
-                  <th>createDate</th>
-                  <th>createdBy</th>
-                  
-                </tr>
-              </thead>
-              <tbody>{this.renderTableData()}</tbody>
-            </table>
+               {nidSearchData}
                 {/* End Content*/}
               </div>
             </div>
@@ -194,4 +198,4 @@ class KycHistory extends Component {
     }
 }
  
-export default KycHistory;
+export default SearchNid;
