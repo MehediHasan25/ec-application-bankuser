@@ -5,6 +5,7 @@ import UserLogin from './Component/UserLogin';
 import UserForm from './Component/UserForm';
 import Dashboard from './Component/Dashboard';
 import PendingList from './Component/PendingList';
+import KycHistory from './Component/KycHistory';
 
 
 
@@ -21,6 +22,7 @@ class App extends Component {
         <Route exact path="/userform" component={UserForm} />
         <Route exact path="/dashboard" component={Dashboard} />
         <Route exact path="/pending-list" component={PendingList} />
+        <Route exact path="/show-kyc-history" component={KycHistory} />
         </Switch>
       </div>
     </Router>

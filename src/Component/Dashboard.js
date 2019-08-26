@@ -109,7 +109,7 @@ class Dashboard extends Component {
             Pending List &nbsp;&nbsp;
             <i className="fas fa-id-badge" />
           </Link>
-          <Link to="#about">
+          <Link to="/show-kyc-history">
             Verification History &nbsp;&nbsp;
             <i className="fas fa-eject" />
           </Link>

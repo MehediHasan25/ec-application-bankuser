@@ -34,6 +34,10 @@ class UserForm extends Component {
     isEnable: false
   };
 
+  componentDidMount(){
+    this.props.history.push('/userform');
+  }
+
   onSubmit = e => {
     e.preventDefault();
     const {
@@ -94,12 +98,13 @@ class UserForm extends Component {
         imageFrontType
     }
 
-    console.log(obj);
+    //console.log(obj);
 
     axios.post(eKycVerification, obj, config)
     .then(res=>{
-        console.log(res);
+        //console.log(res);
         alert("Successfully Verified");
+        document.getElementById('InputFile').value ="";
     })
     .catch(err=> {
         if (err.response) {
@@ -125,6 +130,23 @@ class UserForm extends Component {
         }
     });
 
+    this.setState({
+      name: "",
+    nidNo: "",
+    dob: "",
+    rIndex: "",
+    rThump: "",
+    lIndex: "",
+    lThump: "",
+    fatherName: "",
+    motherName: "",
+    pob: "",
+    imageFront:"",
+    imageFrontType:"",
+    bloodGroup: "",
+    issueDate: "",
+    address: ""
+    });
 
   }
 
@@ -147,7 +169,7 @@ class UserForm extends Component {
     axios
       .post(`http://localhost:20000/api/info/fingerdata`, fingerobj, config)
       .then(res => {
-        console.log(res);
+      //  console.log(res);
         const data = res.data;
         let rightThumb = data[0].fingerData;
         let rightIndex = data[1].fingerData;
@@ -385,7 +407,7 @@ class UserForm extends Component {
             Pending List &nbsp;&nbsp;
             <i className="fas fa-id-badge" />
           </Link>
-          <Link to="#about">
+          <Link to="/show-kyc-history">
             Verification History &nbsp;&nbsp;
             <i className="fas fa-eject" />
           </Link>
@@ -420,6 +442,7 @@ class UserForm extends Component {
                         type="text"
                         className="form-control"
                         id="name"
+                        value={this.state.name}
                         onChange={this.onChangeName}
                         placeholder="Customer's Name"
                         
@@ -431,6 +454,7 @@ class UserForm extends Component {
                         type="text"
                         className="form-control"
                         id="nid"
+                        value={this.state.nidNo}
                         onChange={this.onChangeNidNo}
                         placeholder="Customer's NID No."
                       />
@@ -441,7 +465,7 @@ class UserForm extends Component {
                         <label htmlFor="dob">Date of Birth:</label>
                       </div>
                       <div className="">
-                        <DayPickerInput onDayChange={this.handleDayChange} />
+                        <DayPickerInput onDayChange={this.handleDayChange} value={this.state.dob} />
                       </div>
                     </div>
 
@@ -462,6 +486,7 @@ class UserForm extends Component {
                         type="text"
                         className="form-control"
                         id="fatherName"
+                        value={this.state.fatherName}
                         onChange={this.onChangeFatherName}
                         placeholder="Father Name"
                         
@@ -472,6 +497,7 @@ class UserForm extends Component {
                         type="text"
                         className="form-control"
                         id="motherName"
+                        value={this.state.motherName}
                         onChange={this.onChangeMotherName}
                         placeholder="Mother Name"
                         
@@ -482,6 +508,7 @@ class UserForm extends Component {
                         type="text"
                         className="form-control"
                         id="pob"
+                        value={this.state.pob}
                         onChange={this.onChangePob}
                         placeholder="Place Of Birth"
                         
@@ -490,6 +517,7 @@ class UserForm extends Component {
                     <div className="form-group">
                       <select
                         className="custom-select"
+                        value={this.state.bloodGroup}
                         onChange={this.onChangeBloodGroup}
                       >
                         <option value="">Blood Group</option>
@@ -506,6 +534,7 @@ class UserForm extends Component {
                         type="text"
                         className="form-control"
                         id="issueDate"
+                        value={this.state.issueDate}
                         onChange={this.onChangeIssueDate}
                         placeholder="NID Issue Date (Ex. 15 Jun 2016)"
                       />
@@ -516,6 +545,7 @@ class UserForm extends Component {
                         className="form-control"
                         id="address"
                         rows="3"
+                        value={this.state.address}
                         onChange={this.onChangeAddress}
                         placeholder="Address"
                         spellCheck="false"
@@ -529,7 +559,9 @@ class UserForm extends Component {
                       <input
                         type="file"
                         className="form-control-file"
-                        id="exampleInputFile"
+                        id="InputFile"
+                        // key={this.state.imageFront}
+                         //key={this.state.imageFrontType}
                         onChange={this.fileSelectedHandler}
                         aria-describedby="fileHelp"
                       />

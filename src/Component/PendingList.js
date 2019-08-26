@@ -22,7 +22,7 @@ class PendingList extends Component {
       .then(res => {
        // console.log(res);
         this.setState({ pendingList: res.data });
-        console.log(this.state.pendingList);
+       // console.log(this.state.pendingList);
       })
       .catch(err => {
         if (err.response) {
@@ -51,7 +51,7 @@ class PendingList extends Component {
   };
 
   onTableId = (id, ecVerStatusTdId) => {
-    console.log({ id });
+    //console.log({ id });
     const config = {
       headers: {
         "x-auth-token": cookie.getCookie("x-auth-token")
@@ -109,11 +109,7 @@ class PendingList extends Component {
           <td>{nidNo}</td>
           <td>{dob}</td>
           <td id={ecVerStatusTdId}>{ecVerificationStatus}</td>
-          <td>
-            {new Date(createDate).toLocaleDateString() +
-              " - " +
-              new Date(createDate).toLocaleTimeString()}
-          </td>
+          <td>{new Date(createDate).toLocaleDateString() + " - " + new Date(createDate).toLocaleTimeString()}</td>
           <td>
             <button
               type="button"
@@ -184,7 +180,7 @@ class PendingList extends Component {
             Pending List &nbsp;&nbsp;
             <i className="fas fa-id-badge" />
           </Link>
-          <Link to="#about">
+          <Link to="/show-kyc-history">
             Verification History &nbsp;&nbsp;
             <i className="fas fa-eject" />
           </Link>
