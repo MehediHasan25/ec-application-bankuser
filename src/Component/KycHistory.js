@@ -54,9 +54,7 @@ class KycHistory extends Component {
 
     renderTableData() {
         return this.state.historyData.map((historyData, index) => {
-          // console.log(data.createDate);
-          //  const nidFormat= dateFormatConverter.getNidFormat(data.createDate);
-          // console.log(nidFormat);
+          
           const {
             _id,
             name,

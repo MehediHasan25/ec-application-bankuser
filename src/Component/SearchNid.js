@@ -10,7 +10,9 @@ import cookie from "../Utils/cookie";
 class SearchNid extends Component {
     state = { 
         nidNo:'',
-        searchNidData: []
+        searchNidData: [],
+        isShow: false
+        
      }
 
      onSubmit = e =>{
@@ -27,10 +29,14 @@ class SearchNid extends Component {
          const obj={
             nidNo
          };
+        // console.log(obj);
 
          axios.post(searchUserNid, obj, config )
          .then(res =>{
-             console.log(res);
+            // console.log(res.data);
+             this.setState({searchNidData: res.data});
+            // console.log(this.state.searchNidData);
+            this.setState({isShow: true});
          })
          .catch(err => {
             if (err.response) {
@@ -52,7 +58,7 @@ class SearchNid extends Component {
           });
      }
 
-     onChangeSearchNid = e => this.setState({nidNumber: e.target.value});
+     onChangeNidNo = e => this.setState({nidNo: e.target.value, isShow: false} );
 
      logout = e =>{
         cookie.setCookie('x-auth-token', "", -1);
@@ -61,8 +67,48 @@ class SearchNid extends Component {
         cookie.setCookie('userType', "", -1);
     } 
 
+    renderTableData() {
+      return this.state.searchNidData.map((searchNidData, index) => {
+        
+        const {
+          _id,
+          name,
+          fatherName,
+          motherName,
+          nidNo,
+          dob,
+          pob,
+          bloodGroup,
+          address,
+          issueDate,
+          ecVerificationStatus,
+          createDate,
+          createdBy     
+        } = searchNidData; //destructuring
+      
+        return (
+          <tr key={_id}>
+            <td>{name}</td>
+            <td>{fatherName}</td>
+            <td>{motherName}</td>
+            <td>{nidNo}</td>
+            <td>{dob}</td>
+            <td>{pob}</td>
+            <td>{bloodGroup}</td>
+            <td>{address}</td>  
+            <td>{issueDate}</td>
+            <td>{ecVerificationStatus}</td>  
+            <td>{new Date(createDate).toLocaleDateString() + " - " + new Date(createDate).toLocaleTimeString()}</td>
+            <td>{createdBy}</td>
+            
+          </tr>
+        );
+      });
+    }
+
     render() { 
         let cookieName = cookie.getCookie('username');
+       
         const nidSearchData= (
             <div className="container" style={{ backgroundColor: "#f7f7f7" }}>
               <div
@@ -86,7 +132,7 @@ class SearchNid extends Component {
                     <div className="form-group">
                       <input
                         type="text"
-                        onChange={this.onChangeSearchNid}
+                        onChange={this.onChangeNidNo}
                         className="form-control"
                         id="name"
                         placeholder="Nid No"
@@ -120,6 +166,31 @@ class SearchNid extends Component {
               </div>
             </div>
           );
+
+          const searchNidTable = (
+            <table id="data" className=""style={{fontSize:'11pt'}}>
+              <thead>
+                <tr>
+                  <th>Name</th>
+                  <th>Father Name</th>
+                  <th>Mother Name</th>
+                  <th>Nid No</th>
+                  <th>Date of Birth</th>
+                  <th>Place of Birth</th>
+                  <th>Blood Group</th>
+                  <th>Address</th>
+                  <th>Issue Date</th>
+                  <th>ecVerificationStatus</th>
+                  <th>createDate</th>
+                  <th>createdBy</th>
+                  
+                </tr>
+              </thead>
+              <tbody>{this.renderTableData()}</tbody>
+            </table>
+          );
+
+
         return ( 
             <div>
             <nav
@@ -190,6 +261,7 @@ class SearchNid extends Component {
               <div className="row ">
                 {/* Start Content*/}
                {nidSearchData}
+               {this.state.isShow ? searchNidTable : ''}
                 {/* End Content*/}
               </div>
             </div>
