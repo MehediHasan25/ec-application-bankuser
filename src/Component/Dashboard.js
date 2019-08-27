@@ -1,16 +1,20 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import cookie from "../Utils/cookie";
+import { Link, Redirect } from "react-router-dom";
+//import cookie from "../Utils/cookie";
 import './css/tab.css';
+
+import {checkValidation} from '../Utils/routeControl';
+
 
 class Dashboard extends Component {
   state = {};
 
+  UNSAFE_componentWillMount() {
+    document.title = 'Home';
+}
+
   logout = e =>{
-      cookie.setCookie('x-auth-token', "", -1);
-      cookie.setCookie('username', '', -1);
-      cookie.setCookie('userStatus', '', -1);
-      cookie.setCookie('userType', "", -1);
+    sessionStorage.clear(); 
   } 
 
   handleFingerPrint = e =>{
@@ -18,7 +22,11 @@ class Dashboard extends Component {
   }
 
   render() {
-      let cookieName = cookie.getCookie('username');
+    let sessionName = sessionStorage.getItem('username');
+     let cv = checkValidation(sessionStorage.getItem('x-auth-token'), sessionStorage.getItem('userStatus'));
+     //console.log(cv);
+     if(cv !== null) return <Redirect to="/"/>
+
     return (
       <div>
         <nav
@@ -81,7 +89,7 @@ class Dashboard extends Component {
                 style={{ color: "#ffffff" }}
               >
                 <i className="fas fa-user" />
-                &nbsp; Welcome, {cookieName}
+                &nbsp; Welcome, {sessionName}
               </Link>
               <Link
                 to="/"

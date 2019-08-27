@@ -3,11 +3,11 @@ import DayPickerInput from "react-day-picker/DayPickerInput";
 import "react-day-picker/lib/style.css";
 //import dateFormatConverter from "../Utils/dateFormatConverter";
 import "./css/sidebar.css";
-import {Link} from 'react-router-dom';
-import cookie from "../Utils/cookie";
-import{eKycVerification} from '../Url/User'
+import { Link, Redirect } from "react-router-dom";
+//import cookie from "../Utils/cookie";
+import { eKycVerification } from "../Url/User";
 import axios from "axios";
-
+import { checkValidation } from "../Utils/routeControl";
 
 class UserForm extends Component {
   state = {
@@ -34,8 +34,12 @@ class UserForm extends Component {
     isEnable: false
   };
 
-  componentDidMount(){
-    this.props.history.push('/userform');
+  UNSAFE_componentWillMount() {
+    document.title = "Verify Customer";
+  }
+
+  componentDidMount() {
+    this.props.history.push("/userform");
   }
 
   onSubmit = e => {
@@ -55,9 +59,7 @@ class UserForm extends Component {
       issueDate,
       address,
       imageFront,
-      imageFrontType,
-      createdBy,
-      ecVerificationStatus
+      imageFrontType
     } = this.state;
     // console.log("right Thumb", rThump);
     // console.log("Right Index", rIndex);
@@ -75,90 +77,84 @@ class UserForm extends Component {
     // console.log("image Front",imageFront);
     // console.log("type",imageFrontType);
     const config = {
-        headers: {
-          "x-auth-token": cookie.getCookie("x-auth-token")
-        }
-      };
-
-    const obj= {
-        name,
-        nidNo,
-        dob,
-        rIndex,
-        rThump,
-        lIndex,
-        lThump,
-        fatherName,
-        motherName,
-        pob,
-        bloodGroup,
-        issueDate,
-        address,
-        imageFront,
-        imageFrontType
-    }
-
-    //console.log(obj);
-
-    axios.post(eKycVerification, obj, config)
-    .then(res=>{
-        //console.log(res);
-        alert("Successfully Verified");
-        document.getElementById('InputFile').value ="";
-    })
-    .catch(err=> {
-        if (err.response) {
-            if (err.response.status === 400 || err.response.status === 401) {
-                console.log(err.response.data);
-                alert(err.response.data.message);
-               
-            }
-            else if (err.response.status === 404) {
-                alert("Not Found");
-            }
-            else if (err.response.status === 500) {
-                alert(err.response.data.message);
-            }
-        }
-        else if(err.request){
-            console.log(err.request);
-            alert("Error Connectiong");
-        }
-        else{
-            console.log("Error", err.message);
-            alert(err.message);
-        }
-    });
-
-    this.setState({
-      name: "",
-    nidNo: "",
-    dob: "",
-    rIndex: "",
-    rThump: "",
-    lIndex: "",
-    lThump: "",
-    fatherName: "",
-    motherName: "",
-    pob: "",
-    imageFront:"",
-    imageFrontType:"",
-    bloodGroup: "",
-    issueDate: "",
-    address: ""
-    });
-
-  }
-
-  handleClick = e => {
-    this.setState({ isEnable: true });
-    const config = {
       headers: {
-        "x-auth-token": cookie.getCookie("x-auth-token")
+        "x-auth-token": sessionStorage.getItem("x-auth-token")
       }
     };
 
-  
+    const obj = {
+      name,
+      nidNo,
+      dob,
+      rIndex,
+      rThump,
+      lIndex,
+      lThump,
+      fatherName,
+      motherName,
+      pob,
+      bloodGroup,
+      issueDate,
+      address,
+      imageFront,
+      imageFrontType
+    };
+
+    //console.log(obj);
+
+    axios
+      .post(eKycVerification, obj, config)
+      .then(res => {
+        //console.log(res);
+        alert("Successfully Verified");
+        document.getElementById("InputFile").value = "";
+      })
+      .catch(err => {
+        if (err.response) {
+          if (err.response.status === 400 || err.response.status === 401) {
+            console.log(err.response.data);
+            alert(err.response.data.message);
+          } else if (err.response.status === 404) {
+            alert("Not Found");
+          } else if (err.response.status === 500) {
+            alert(err.response.data.message);
+          }
+        } else if (err.request) {
+          console.log(err.request);
+          alert("Error Connectiong");
+        } else {
+          console.log("Error", err.message);
+          alert(err.message);
+        }
+      });
+
+    this.setState({
+      name: "",
+      nidNo: "",
+      dob: "",
+      rIndex: "",
+      rThump: "",
+      lIndex: "",
+      lThump: "",
+      fatherName: "",
+      motherName: "",
+      pob: "",
+      imageFront: "",
+      imageFrontType: "",
+      bloodGroup: "",
+      issueDate: "",
+      address: ""
+    });
+  };
+
+  handleClick = e => {
+    this.setState({ isEnable: true });
+
+    const config = {
+      headers: {
+        "x-auth-token": sessionStorage.getItem("x-auth-token")
+      }
+    };
 
     const fingerobj = {
       MinQ: 30,
@@ -169,13 +165,12 @@ class UserForm extends Component {
     axios
       .post(`http://localhost:20000/api/info/fingerdata`, fingerobj, config)
       .then(res => {
-      //  console.log(res);
+        //  console.log(res);
         const data = res.data;
         let rightThumb = data[0].fingerData;
         let rightIndex = data[1].fingerData;
         let leftThumb = data[2].fingerData;
         let leftIndex = data[3].fingerData;
-
 
         if (data[0].fingerId === 1) {
           this.setState({ rThump: rightThumb });
@@ -242,13 +237,9 @@ class UserForm extends Component {
     }
   };
 
-  logout = e =>{
-    cookie.setCookie('x-auth-token', "", -1);
-    cookie.setCookie('username', '', -1);
-    cookie.setCookie('userStatus', '', -1);
-    cookie.setCookie('userType', "", -1);
-} 
-
+  logout = e => {
+    sessionStorage.clear();
+  };
 
   onChangeFatherName = e => this.setState({ fatherName: e.target.value });
   onChangeMotherName = e => this.setState({ motherName: e.target.value });
@@ -282,7 +273,14 @@ class UserForm extends Component {
   };
 
   render() {
-    let cookieName = cookie.getCookie('username');
+    let sessionName = sessionStorage.getItem("username");
+
+    let cv = checkValidation(
+      sessionStorage.getItem("x-auth-token"),
+      sessionStorage.getItem("userStatus")
+    );
+    if (cv !== null) return <Redirect to="/" />;
+
     return (
       <div>
         <nav
@@ -345,7 +343,7 @@ class UserForm extends Component {
                 style={{ color: "#ffffff" }}
               >
                 <i className="fas fa-user" />
-                &nbsp; Welcome, {cookieName}
+                &nbsp; Welcome, {sessionName}
               </Link>
               <Link
                 to="/"
@@ -394,7 +392,7 @@ class UserForm extends Component {
             <i className="fas fa-eject" />
           </Link>
         </div> */}
-          <div className="sidebar shadow" style={{ backgroundColor: "#8f8e8e" }}>
+        <div className="sidebar shadow" style={{ backgroundColor: "#8f8e8e" }}>
           <Link className="active" to="/dashboard">
             Home &nbsp;&nbsp;
             <i className="fas fa-home" />
@@ -412,10 +410,9 @@ class UserForm extends Component {
             <i className="fas fa-eject" />
           </Link>
           <Link to="/search-user-nid">
-                Search By Nid  &nbsp;&nbsp;
-                <i className="fas fa-eject" />
-              </Link>
-          
+            Search By Nid &nbsp;&nbsp;
+            <i className="fas fa-eject" />
+          </Link>
         </div>
 
         <div className="content">
@@ -449,7 +446,6 @@ class UserForm extends Component {
                         value={this.state.name}
                         onChange={this.onChangeName}
                         placeholder="Customer's Name"
-                        
                       />
                     </div>
 
@@ -469,7 +465,10 @@ class UserForm extends Component {
                         <label htmlFor="dob">Date of Birth:</label>
                       </div>
                       <div className="">
-                        <DayPickerInput onDayChange={this.handleDayChange} value={this.state.dob} />
+                        <DayPickerInput
+                          onDayChange={this.handleDayChange}
+                          value={this.state.dob}
+                        />
                       </div>
                     </div>
 
@@ -493,7 +492,6 @@ class UserForm extends Component {
                         value={this.state.fatherName}
                         onChange={this.onChangeFatherName}
                         placeholder="Father Name"
-                        
                       />
                     </div>
                     <div className="form-group">
@@ -504,7 +502,6 @@ class UserForm extends Component {
                         value={this.state.motherName}
                         onChange={this.onChangeMotherName}
                         placeholder="Mother Name"
-                        
                       />
                     </div>
                     <div className="form-group">
@@ -515,7 +512,6 @@ class UserForm extends Component {
                         value={this.state.pob}
                         onChange={this.onChangePob}
                         placeholder="Place Of Birth"
-                        
                       />
                     </div>
                     <div className="form-group">
@@ -565,7 +561,7 @@ class UserForm extends Component {
                         className="form-control-file"
                         id="InputFile"
                         // key={this.state.imageFront}
-                         //key={this.state.imageFrontType}
+                        //key={this.state.imageFrontType}
                         onChange={this.fileSelectedHandler}
                         aria-describedby="fileHelp"
                       />

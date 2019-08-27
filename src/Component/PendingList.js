@@ -1,28 +1,33 @@
 import React, { Component } from "react";
-import { Link } from "react-router-dom";
-import cookie from "../Utils/cookie";
+import { Link,Redirect } from "react-router-dom";
+//import cookie from "../Utils/cookie";
 import axios from "axios";
 import "./css/table.css";
 import { pendingList } from "./../Url/User";
 import { pendingVerify } from "../Url/User";
+import { checkValidation } from "../Utils/routeControl";
 
 class PendingList extends Component {
   state = {
     pendingList: []
   };
 
+  UNSAFE_componentWillMount() {
+    document.title = "Pending User List";
+  }
+
   componentDidMount() {
     const config = {
       headers: {
-        "x-auth-token": cookie.getCookie("x-auth-token")
+        "x-auth-token": sessionStorage.getItem("x-auth-token")
       }
     };
     axios
       .get(pendingList, config)
       .then(res => {
-       // console.log(res);
+        // console.log(res);
         this.setState({ pendingList: res.data });
-       // console.log(this.state.pendingList);
+        // console.log(this.state.pendingList);
       })
       .catch(err => {
         if (err.response) {
@@ -44,17 +49,14 @@ class PendingList extends Component {
       });
   }
   logout = e => {
-    cookie.setCookie("x-auth-token", "", -1);
-    cookie.setCookie("username", "", -1);
-    cookie.setCookie("userStatus", "", -1);
-    cookie.setCookie("userType", "", -1);
+    sessionStorage.clear();
   };
 
   onTableId = (id, ecVerStatusTdId) => {
     //console.log({ id });
     const config = {
       headers: {
-        "x-auth-token": cookie.getCookie("x-auth-token")
+        "x-auth-token": sessionStorage.getItem("x-auth-token")
       }
     };
     const obj = {
@@ -63,11 +65,11 @@ class PendingList extends Component {
     axios
       .post(pendingVerify, obj, config)
       .then(res => {
-       // console.log(res);
-       // console.log(ecVerStatusTdId);
-       // console.log(res.data.ecVerificationStatus);
-         document.getElementById(ecVerStatusTdId).innerHTML = res.data.ecVerificationStatus;
-        
+        // console.log(res);
+        // console.log(ecVerStatusTdId);
+        // console.log(res.data.ecVerificationStatus);
+        document.getElementById(ecVerStatusTdId).innerHTML =
+          res.data.ecVerificationStatus;
       })
       .catch(err => {
         if (err.response) {
@@ -102,14 +104,18 @@ class PendingList extends Component {
         dob,
         createDate
       } = pendingList; //destructuring
-      let ecVerStatusTdId = "ecStatus"+ _id;
+      let ecVerStatusTdId = "ecStatus" + _id;
       return (
         <tr key={_id}>
           <td>{name}</td>
           <td>{nidNo}</td>
           <td>{dob}</td>
           <td id={ecVerStatusTdId}>{ecVerificationStatus}</td>
-          <td>{new Date(createDate).toLocaleDateString() + " - " + new Date(createDate).toLocaleTimeString()}</td>
+          <td>
+            {new Date(createDate).toLocaleDateString() +
+              " - " +
+              new Date(createDate).toLocaleTimeString()}
+          </td>
           <td>
             <button
               type="button"
@@ -124,7 +130,14 @@ class PendingList extends Component {
     });
   }
   render() {
-    let cookieName = cookie.getCookie("username");
+    let sessionName = sessionStorage.getItem("username");
+    /// protected Route
+    let cv = checkValidation(
+      sessionStorage.getItem("x-auth-token"),
+      sessionStorage.getItem("userStatus")
+    );
+    if (cv !== null) return <Redirect to="/" />;
+
     return (
       <div>
         <nav
@@ -152,7 +165,7 @@ class PendingList extends Component {
                 style={{ color: "#ffffff" }}
               >
                 <i className="fas fa-user" />
-                &nbsp; Welcome, {cookieName}
+                &nbsp; Welcome, {sessionName}
               </Link>
               <Link
                 to="/"
@@ -185,16 +198,28 @@ class PendingList extends Component {
             <i className="fas fa-eject" />
           </Link>
           <Link to="/search-user-nid">
-                Search By Nid  &nbsp;&nbsp;
-                <i className="fas fa-eject" />
-              </Link>
+            Search By Nid &nbsp;&nbsp;
+            <i className="fas fa-eject" />
+          </Link>
         </div>
-        <br/> 
+        <br />
         <div className="content">
+          <div
+            className="shadow mb-4"
+            style={{
+              backgroundColor: "#fcfcfc",
+              color: "#8f8e8e",
+              textAlign: "center",
+              marginTop: "50px"
+            }}
+          >
+            <h2>
+              <i className="fas fa-user-check"></i>&nbsp;Pending User
+            </h2>
+          </div>
           <div className="row ">
             {/* Start Content*/}
-           
-            <h1 className="">Verify User</h1>
+
             <table id="data">
               <thead>
                 <tr>
