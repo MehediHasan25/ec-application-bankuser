@@ -136,6 +136,7 @@ class KycHistory extends Component {
               className="btn btn-primary"
               data-toggle="modal"
               data-target="#myModal"
+              style={{ backgroundColor: "#56c9ef" }}
             >
               Image
             </button>
@@ -285,7 +286,7 @@ class KycHistory extends Component {
                   <th>Address</th>
                   <th>Issue Date</th>
                   <th>ecVerificationStatus</th>
-                  <th>Image</th>
+                  <th>NID Image</th>
                   <th>createDate</th>
                   <th>createdBy</th>
                 </tr>

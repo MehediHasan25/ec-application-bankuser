@@ -6,11 +6,14 @@ import "./css/table.css";
 import { pendingList } from "./../Url/User";
 import { pendingVerify } from "../Url/User";
 import { checkValidation } from "../Utils/routeControl";
+import { getNidImage } from "../Url/User";
 
 
 class PendingList extends Component {
   state = {
-    pendingList: []
+    pendingList: [],
+    image:'',
+    flag: "data:image/jpeg;base64,"
   };
 
   UNSAFE_componentWillMount() {
@@ -51,6 +54,48 @@ class PendingList extends Component {
   }
   logout = e => {
     sessionStorage.clear();
+  };
+
+  ///Image Button
+  onImageId = id => {
+    console.log(id);
+
+    const config = {
+      headers: {
+        "x-auth-token": sessionStorage.getItem("x-auth-token")
+      }
+    };
+    const obj = {
+      eKycId: id
+    };
+
+    //console.log(idImage);
+
+    axios
+      .post(getNidImage, obj, config)
+      .then(res => {
+        console.log(res);
+        let front = res.data.imageFront;
+        this.setState({ image: front });
+      })
+      .catch(err => {
+        if (err.response) {
+          if (err.response.status === 400 || err.response.status === 401) {
+            console.log(err.response.data);
+            alert(err.response.data.message);
+          } else if (err.response.status === 404) {
+            alert("Not Found");
+          } else if (err.response.status === 500) {
+            alert(err.response.data.message);
+          }
+        } else if (err.request) {
+          console.log(err.request);
+          alert("Error Connectiong");
+        } else {
+          console.log("Error", err.message);
+          alert(err.message);
+        }
+      });
   };
 
   onTableId = (id, ecVerStatusTdId) => {
@@ -112,6 +157,48 @@ class PendingList extends Component {
           <td>{nidNo}</td>
           <td>{dob}</td>
           <td id={ecVerStatusTdId}>{ecVerificationStatus}</td>
+          <td>
+            <button
+              type="button"
+              onClick={() => this.onImageId(_id)}
+              className="btn btn-primary"
+              data-toggle="modal"
+              data-target="#myModal"
+              style={{ backgroundColor: "#56c9ef" }}
+            >
+              Image
+            </button>
+            <div className="modal" id="myModal">
+              <div className="modal-dialog">
+                <div className="modal-content">
+                  <div className="modal-header">
+                    <h4 className="modal-title">Nid Image</h4>
+                    <button
+                      type="button"
+                      className="close"
+                      data-dismiss="modal"
+                    >
+                      &times;
+                    </button>
+                  </div>
+
+                  <div className="modal-body text-center">
+                    <img
+                      src={this.state.flag+this.state.image}
+                      className=""
+                      alt=""
+                      width="200"
+                      height="200"
+                    />
+                  </div>
+
+                  <div className="modal-footer">
+                    
+                  </div>
+                </div>
+              </div>
+            </div>
+          </td>
           <td>
             {new Date(createDate).toLocaleDateString() +
               " - " +
@@ -228,6 +315,7 @@ class PendingList extends Component {
                   <th>Nid No</th>
                   <th>Date of Birth</th>
                   <th>ecVerificationStatus</th>
+                  <th>NID Image</th>
                   <th>createDate</th>
                   <th>Action</th>
                 </tr>
