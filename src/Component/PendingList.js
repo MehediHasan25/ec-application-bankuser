@@ -7,6 +7,7 @@ import { pendingList } from "./../Url/User";
 import { pendingVerify } from "../Url/User";
 import { checkValidation } from "../Utils/routeControl";
 
+
 class PendingList extends Component {
   state = {
     pendingList: []

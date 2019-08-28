@@ -69,14 +69,9 @@ class UserLogin extends Component {
   onChangePassword = e => this.setState({ password: e.target.value });
   render() {
     
-    if (sessionStorage.getItem("x-auth-token") === "") {
-      return <Redirect to="/" />;
-    } else {
-      if (sessionStorage.getItem("userStatus") === "inactive") {
-        //alert("User inactive");
-        return <Redirect to="/" />;
-      }
-    }
+    if (sessionStorage.getItem("x-auth-token") !== null) {
+      return <Redirect to="/dashboard" />;
+  }
 
     return (
       <div>
