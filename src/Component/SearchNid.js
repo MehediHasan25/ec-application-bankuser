@@ -1,18 +1,19 @@
 import React, { Component } from "react";
-import { Link,Redirect } from "react-router-dom";
+import { Link, Redirect } from "react-router-dom";
 import { searchUserNid } from "../Url/User";
 import "./css/table.css";
 import axios from "axios";
 //import cookie from "../Utils/cookie";
 import { checkValidation } from "../Utils/routeControl";
 import { getNidImage } from "../Url/User";
+import {statusConverter} from "../Utils/statusConverter";
 
 class SearchNid extends Component {
   state = {
     nidNo: "",
     searchNidData: [],
     isShow: false,
-    image: '',
+    image: "",
     flag: "data:image/jpeg;base64,"
   };
 
@@ -88,7 +89,7 @@ class SearchNid extends Component {
     axios
       .post(getNidImage, obj, config)
       .then(res => {
-        console.log(res);
+       // console.log(res);
         let front = res.data.imageFront;
         this.setState({ image: front });
       })
@@ -132,16 +133,17 @@ class SearchNid extends Component {
 
       return (
         <tr key={_id}>
+          <td>{nidNo}</td>
+          <td>{dob}</td>
+          <td>{statusConverter(ecVerificationStatus)}</td>
           <td>{name}</td>
           <td>{fatherName}</td>
           <td>{motherName}</td>
-          <td>{nidNo}</td>
-          <td>{dob}</td>
           <td>{pob}</td>
           <td>{bloodGroup}</td>
           <td>{address}</td>
           <td>{issueDate}</td>
-          <td>{ecVerificationStatus}</td>
+
           <td>
             <button
               type="button"
@@ -169,7 +171,7 @@ class SearchNid extends Component {
 
                   <div className="modal-body text-center">
                     <img
-                      src={this.state.flag+this.state.image}
+                      src={this.state.flag + this.state.image}
                       className=""
                       alt=""
                       width="200"
@@ -177,9 +179,7 @@ class SearchNid extends Component {
                     />
                   </div>
 
-                  <div className="modal-footer">
-                    
-                  </div>
+                  <div className="modal-footer"></div>
                 </div>
               </div>
             </div>
@@ -267,16 +267,16 @@ class SearchNid extends Component {
       <table id="data" className="" style={{ fontSize: "11pt" }}>
         <thead>
           <tr>
+            <th>Nid No</th>
+            <th>Date of Birth</th>
+            <th>ecVerificationStatus</th>
             <th>Name</th>
             <th>Father Name</th>
             <th>Mother Name</th>
-            <th>Nid No</th>
-            <th>Date of Birth</th>
             <th>Place of Birth</th>
             <th>Blood Group</th>
             <th>Address</th>
-            <th>Issue Date</th>
-            <th>ecVerificationStatus</th>
+            <th>Issue Date</th>          
             <th>NID Image</th>
             <th>createDate</th>
             <th>createdBy</th>

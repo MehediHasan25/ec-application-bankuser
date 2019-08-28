@@ -13,7 +13,9 @@ class UserForm extends Component {
   state = {
     name: "",
     nidNo: "",
+    nidNoValidation: false,
     dob: "",
+    dobValidation: false,
     rIndex: "",
     rThump: "",
     lIndex: "",
@@ -76,6 +78,33 @@ class UserForm extends Component {
     // console.log(address);
     // console.log("image Front",imageFront);
     // console.log("type",imageFrontType);
+
+     if (nidNo.length < 10) {
+            this.getNidNoError = alert("NID No must be 10, 13 & 17 digits");
+            this.setState({ nidNoValidation: true });
+            return;
+        } else if (nidNo.length >= 11 && nidNo.length <= 12) {
+            this.getNidNoError = alert("NID No must be 10, 13 & 17 digits");
+            this.setState({ nidNoValidation: true });
+            return;
+        }
+        else if (nidNo.length >= 14 && nidNo.length <= 16) {
+            this.getNidNoError = alert("NID No must be 10, 13 & 17 digits");
+            this.setState({ nidNoValidation: true });
+            return;
+        } else if (nidNo.length > 17) {
+            this.getNidNoError = alert("NID No must be 10, 13 & 17 digits");
+            this.setState({ nidNoValidation: true });
+            return;
+        }
+
+        if (dob === '') {
+          this.getNidDobError = alert("Date of Birth is empty");
+          this.setState({ dobValidation: true });
+          return;
+      }
+
+
     const config = {
       headers: {
         "x-auth-token": sessionStorage.getItem("x-auth-token")
@@ -106,7 +135,32 @@ class UserForm extends Component {
       .post(eKycVerification, obj, config)
       .then(res => {
         //console.log(res);
-        alert("Successfully Verified");
+        try {
+          let ecStatus = res.data.ecVerificationStatus;
+          if(ecStatus === "v") alert("Successfully Verified");
+          else if(ecStatus === "p") alert("Verification is Pending");
+          else if(ecStatus === "n") alert("Not Verified");
+        }
+        catch(ex) {
+
+        }
+        this.setState({
+          name: "",
+          nidNo: "",
+          dob: "",
+          rIndex: "",
+          rThump: "",
+          lIndex: "",
+          lThump: "",
+          fatherName: "",
+          motherName: "",
+          pob: "",
+          imageFront: "",
+          imageFrontType: "",
+          bloodGroup: "",
+          issueDate: "",
+          address: ""
+        });
         document.getElementById("InputFile").value = "";
       })
       .catch(err => {
@@ -128,23 +182,23 @@ class UserForm extends Component {
         }
       });
 
-    this.setState({
-      name: "",
-      nidNo: "",
-      dob: "",
-      rIndex: "",
-      rThump: "",
-      lIndex: "",
-      lThump: "",
-      fatherName: "",
-      motherName: "",
-      pob: "",
-      imageFront: "",
-      imageFrontType: "",
-      bloodGroup: "",
-      issueDate: "",
-      address: ""
-    });
+    // this.setState({
+    //   name: "",
+    //   nidNo: "",
+    //   dob: "",
+    //   rIndex: "",
+    //   rThump: "",
+    //   lIndex: "",
+    //   lThump: "",
+    //   fatherName: "",
+    //   motherName: "",
+    //   pob: "",
+    //   imageFront: "",
+    //   imageFrontType: "",
+    //   bloodGroup: "",
+    //   issueDate: "",
+    //   address: ""
+    // });
   };
 
   handleClick = e => {
@@ -223,7 +277,7 @@ class UserForm extends Component {
   };
 
   onChangeName = e => this.setState({ name: e.target.value });
-  onChangeNidNo = e => this.setState({ nidNo: e.target.value });
+  onChangeNidNo = e => this.setState({ nidNo: e.target.value, nidNoValidation: true });
   onChangeDob = e => this.setState({ dob: e.target.value });
   handleDayChange = (selectedDay, modifiers, dayPickerInput) => {
     const input = dayPickerInput.getInput();
@@ -301,41 +355,7 @@ class UserForm extends Component {
           </button>
 
           <div className="collapse navbar-collapse" id="navbarCollapse">
-            {/* <div className="navbar-nav">
-              <Link
-                to="#"
-                className="nav-item nav-link"
-                style={{ color: "#ffffff" }}
-              >
-                <i className="fas fa-home" />
-                &nbsp; Home
-              </Link>
-              <Link
-                to="#"
-                className="nav-item nav-link"
-                style={{ color: "#ffffff" }}
-              >
-                <i className="fas fa-user" />
-                &nbsp; Profile
-              </Link>
-              <Link
-                to="#"
-                className="nav-item nav-link"
-                style={{ color: "#ffffff" }}
-              >
-                <i className="fas fa-envelope-open-text" />
-                &nbsp; Messages
-              </Link>
-              <Link
-                to="#"
-                className="nav-item nav-link"
-                style={{ color: "#ffffff" }}
-                tabIndex="-1"
-              >
-                <i className="fab fa-readme" />
-                &nbsp; Reports
-              </Link>
-            </div> */}
+           
             <div className="navbar-nav ml-auto">
               <Link
                 to="#"
@@ -358,40 +378,7 @@ class UserForm extends Component {
           </div>
         </nav>
 
-        {/* <div className="sidebar shadow" style={{ backgroundColor: "#8f8e8e" }}>
-          <Link className="active" to="#home">
-            Home &nbsp;&nbsp;
-            <i className="fas fa-home" />
-          </Link>
-          <Link to="#news">
-            News &nbsp;&nbsp;
-            <i className="fas fa-newspaper" />
-          </Link>
-          <Link to="#contact">
-            Contact &nbsp;&nbsp;
-            <i className="fas fa-id-badge" />
-          </Link>
-          <Link to="#about">
-            About &nbsp;&nbsp;
-            <i className="fas fa-eject" />
-          </Link>
-          <Link className="" to="#home">
-            Home &nbsp;&nbsp;
-            <i className="fas fa-home" />
-          </Link>
-          <Link to="#news">
-            News &nbsp;&nbsp;
-            <i className="fas fa-newspaper" />
-          </Link>
-          <Link to="#contact">
-            Contact &nbsp;&nbsp;
-            <i className="fas fa-id-badge" />
-          </Link>
-          <Link to="#about">
-            About &nbsp;&nbsp;
-            <i className="fas fa-eject" />
-          </Link>
-        </div> */}
+        
         <div className="sidebar shadow" style={{ backgroundColor: "#8f8e8e" }}>
           <Link className="active" to="/dashboard">
             Home &nbsp;&nbsp;
@@ -439,24 +426,14 @@ class UserForm extends Component {
                 <div className="card-body">
                   <form onSubmit={this.onSubmit}>
                     <div className="form-group">
-                      <input
-                        type="text"
-                        className="form-control"
-                        id="name"
-                        value={this.state.name}
-                        onChange={this.onChangeName}
-                        placeholder="Customer's Name"
-                      />
-                    </div>
-
-                    <div className="form-group">
+                    <i style={{ color: 'red', textAlign: "center" }}>{this.state.nidNoValidation === true ? this.getNidNoError : ""}</i>
                       <input
                         type="text"
                         className="form-control"
                         id="nid"
                         value={this.state.nidNo}
                         onChange={this.onChangeNidNo}
-                        placeholder="Customer's NID No."
+                        placeholder="NID No."
                       />
                     </div>
 
@@ -465,6 +442,7 @@ class UserForm extends Component {
                         <label htmlFor="dob">Date of Birth:</label>
                       </div>
                       <div className="">
+                      <i style={{color: 'red', textAlign:"center"}}>{this.state.dobValidation === true ? this.getNidDobError : ""}</i> 
                         <DayPickerInput
                           onDayChange={this.handleDayChange}
                           value={this.state.dob}
@@ -483,6 +461,16 @@ class UserForm extends Component {
                       &nbsp; Provide Customer's Finger
                     </button>
                     <br />
+                    <div className="form-group">
+                      <input
+                        type="text"
+                        className="form-control"
+                        id="name"
+                        value={this.state.name}
+                        onChange={this.onChangeName}
+                        placeholder="Name"
+                      />
+                    </div>
 
                     <div className="form-group">
                       <input

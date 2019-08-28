@@ -1,1 +1,1 @@
-export const hostIp = `http://localhost:5050/`;
+export const hostIp =`http://localhost:5050/`;

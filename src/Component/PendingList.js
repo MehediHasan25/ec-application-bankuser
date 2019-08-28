@@ -7,6 +7,7 @@ import { pendingList } from "./../Url/User";
 import { pendingVerify } from "../Url/User";
 import { checkValidation } from "../Utils/routeControl";
 import { getNidImage } from "../Url/User";
+import {statusConverter} from "../Utils/statusConverter";
 
 
 class PendingList extends Component {
@@ -113,9 +114,10 @@ class PendingList extends Component {
       .then(res => {
         // console.log(res);
         // console.log(ecVerStatusTdId);
-        // console.log(res.data.ecVerificationStatus);
-        document.getElementById(ecVerStatusTdId).innerHTML =
-          res.data.ecVerificationStatus;
+         console.log(res.data.ecVerificationStatus);
+         const status = statusConverter(res.data.ecVerificationStatus);
+        console.log(statusConverter(res.data.ecVerificationStatus));
+        document.getElementById(ecVerStatusTdId).innerHTML = status;
       })
       .catch(err => {
         if (err.response) {
@@ -153,10 +155,11 @@ class PendingList extends Component {
       let ecVerStatusTdId = "ecStatus" + _id;
       return (
         <tr key={_id}>
-          <td>{name}</td>
           <td>{nidNo}</td>
           <td>{dob}</td>
-          <td id={ecVerStatusTdId}>{ecVerificationStatus}</td>
+          {/* <td id={ecVerStatusTdId}>{ecVerificationStatus}</td> */}
+          <td id={ecVerStatusTdId}>{statusConverter(ecVerificationStatus)}</td>
+          <td>{name}</td>
           <td>
             <button
               type="button"
@@ -311,10 +314,11 @@ class PendingList extends Component {
             <table id="data">
               <thead>
                 <tr>
-                  <th>Name</th>
+                 
                   <th>Nid No</th>
                   <th>Date of Birth</th>
                   <th>ecVerificationStatus</th>
+                  <th>Name</th>
                   <th>NID Image</th>
                   <th>createDate</th>
                   <th>Action</th>

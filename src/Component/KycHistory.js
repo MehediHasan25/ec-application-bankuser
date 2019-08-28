@@ -7,6 +7,7 @@ import "./css/table.css";
 //import cookie from "../Utils/cookie";
 import { checkValidation } from "../Utils/routeControl";
 //import Modal from './Reusable/Modal';
+import {statusConverter} from "../Utils/statusConverter";
 
 class KycHistory extends Component {
   state = {
@@ -75,7 +76,7 @@ class KycHistory extends Component {
     axios
       .post(getNidImage, obj, config)
       .then(res => {
-        console.log(res);
+       // console.log(res);
         let front = res.data.imageFront;
         this.setState({ image: front });
       })
@@ -119,16 +120,17 @@ class KycHistory extends Component {
 
       return (
         <tr key={_id}>
+          <td>{nidNo}</td>
+          <td>{dob}</td>
+          <td>{statusConverter(ecVerificationStatus)}</td>
           <td>{name}</td>
           <td>{fatherName}</td>
           <td>{motherName}</td>
-          <td>{nidNo}</td>
-          <td>{dob}</td>
           <td>{pob}</td>
           <td>{bloodGroup}</td>
           <td>{address}</td>
           <td>{issueDate}</td>
-          <td>{ecVerificationStatus}</td>
+
           <td>
             <button
               type="button"
@@ -156,7 +158,7 @@ class KycHistory extends Component {
 
                   <div className="modal-body text-center">
                     <img
-                      src={this.state.flag+this.state.image}
+                      src={this.state.flag + this.state.image}
                       className=""
                       alt=""
                       width="200"
@@ -164,9 +166,7 @@ class KycHistory extends Component {
                     />
                   </div>
 
-                  <div className="modal-footer">
-                    
-                  </div>
+                  <div className="modal-footer"></div>
                 </div>
               </div>
             </div>
@@ -273,19 +273,19 @@ class KycHistory extends Component {
           <div className="row ">
             {/* Start Content*/}
 
-            <table id="data" className="" style={{ fontSize: "11pt" }}>
+            <table id="data" className="">
               <thead>
                 <tr>
-                  <th>Name</th>
-                  <th>Father Name</th>
-                  <th>Mother Name</th>
                   <th>Nid No</th>
                   <th>Date of Birth</th>
+                  <th>ecVerificationStatus</th>
+                  <th>Name</th>
+                  <th>Father Name</th>
+                  <th>Mother Name</th>      
                   <th>Place of Birth</th>
                   <th>Blood Group</th>
                   <th>Address</th>
                   <th>Issue Date</th>
-                  <th>ecVerificationStatus</th>
                   <th>NID Image</th>
                   <th>createDate</th>
                   <th>createdBy</th>
