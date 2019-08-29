@@ -112,10 +112,10 @@ class KycHistory extends Component {
         pob,
         bloodGroup,
         address,
-        issueDate,
+        //issueDate,
         ecVerificationStatus,
-        createDate,
-        createdBy
+        //createDate,
+        //createdBy
       } = historyData; //destructuring
 
       return (
@@ -129,9 +129,9 @@ class KycHistory extends Component {
           <td>{pob}</td>
           <td>{bloodGroup}</td>
           <td>{address}</td>
-          <td>{issueDate}</td>
+          {/* <td>{issueDate}</td> */}
 
-          <td>
+          <td style={{textAlign: "center"}}>
             <button
               type="button"
               onClick={() => this.onImageId(_id)}
@@ -171,12 +171,12 @@ class KycHistory extends Component {
               </div>
             </div>
           </td>
-          <td>
+          {/* <td>
             {new Date(createDate).toLocaleDateString() +
               " - " +
               new Date(createDate).toLocaleTimeString()}
-          </td>
-          <td>{createdBy}</td>
+          </td> */}
+          {/* <td>{createdBy}</td> */}
         </tr>
       );
     });
@@ -266,29 +266,29 @@ class KycHistory extends Component {
               marginTop: "50px"
             }}
           >
-            <h2>
+            <h4>
               <i className="fas fa-user-check"></i>&nbsp; E-KYC History
-            </h2>
+            </h4>
           </div>
           <div className="row ">
             {/* Start Content*/}
 
-            <table id="data" className="">
+            <table id="data" className="" style={{ fontSize: "11pt" }}>
               <thead>
                 <tr>
-                  <th>Nid No</th>
-                  <th>Date of Birth</th>
-                  <th>ecVerificationStatus</th>
+                  <th>NID No</th>
+                  <th>DOB</th>
+                  <th>Status</th>
                   <th>Name</th>
                   <th>Father Name</th>
                   <th>Mother Name</th>      
-                  <th>Place of Birth</th>
+                  <th>Birth Place</th>
                   <th>Blood Group</th>
                   <th>Address</th>
-                  <th>Issue Date</th>
-                  <th>NID Image</th>
-                  <th>createDate</th>
-                  <th>createdBy</th>
+                  {/* <th>Issue Date</th> */}
+                  <th style={{textAlign: "center"}}>NID Image</th>
+                  {/* <th>createDate</th> */}
+                  {/* <th>createdBy</th> */}
                 </tr>
               </thead>
               <tbody>{this.renderTableData()}</tbody>

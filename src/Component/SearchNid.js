@@ -6,11 +6,12 @@ import axios from "axios";
 //import cookie from "../Utils/cookie";
 import { checkValidation } from "../Utils/routeControl";
 import { getNidImage } from "../Url/User";
-import {statusConverter} from "../Utils/statusConverter";
+import { statusConverter } from "../Utils/statusConverter";
 
 class SearchNid extends Component {
   state = {
     nidNo: "",
+    nidNoValidation: false,
     searchNidData: [],
     isShow: false,
     image: "",
@@ -25,6 +26,23 @@ class SearchNid extends Component {
     e.preventDefault();
 
     const { nidNo } = this.state;
+    if (nidNo.length < 10) {
+      this.getNidNoError = alert("NID No must be 10, 13 & 17 digits");
+      this.setState({ nidNoValidation: true });
+      return;
+    } else if (nidNo.length >= 11 && nidNo.length <= 12) {
+      this.getNidNoError = alert("NID No must be 10, 13 & 17 digits");
+      this.setState({ nidNoValidation: true });
+      return;
+    } else if (nidNo.length >= 14 && nidNo.length <= 16) {
+      this.getNidNoError = alert("NID No must be 10, 13 & 17 digits");
+      this.setState({ nidNoValidation: true });
+      return;
+    } else if (nidNo.length > 17) {
+      this.getNidNoError = alert("NID No must be 10, 13 & 17 digits");
+      this.setState({ nidNoValidation: true });
+      return;
+    }
 
     const config = {
       headers: {
@@ -89,7 +107,7 @@ class SearchNid extends Component {
     axios
       .post(getNidImage, obj, config)
       .then(res => {
-       // console.log(res);
+        // console.log(res);
         let front = res.data.imageFront;
         this.setState({ image: front });
       })
@@ -125,10 +143,10 @@ class SearchNid extends Component {
         pob,
         bloodGroup,
         address,
-        issueDate,
+       // issueDate,
         ecVerificationStatus,
-        createDate,
-        createdBy
+       // createDate,
+      //  createdBy
       } = searchNidData; //destructuring
 
       return (
@@ -142,9 +160,9 @@ class SearchNid extends Component {
           <td>{pob}</td>
           <td>{bloodGroup}</td>
           <td>{address}</td>
-          <td>{issueDate}</td>
+          {/* <td>{issueDate}</td> */}
 
-          <td>
+          <td style={{textAlign: "center"}}>
             <button
               type="button"
               onClick={() => this.onImageId(_id)}
@@ -184,12 +202,12 @@ class SearchNid extends Component {
               </div>
             </div>
           </td>
-          <td>
+          {/* <td>
             {new Date(createDate).toLocaleDateString() +
               " - " +
               new Date(createDate).toLocaleTimeString()}
-          </td>
-          <td>{createdBy}</td>
+          </td> */}
+          {/* <td>{createdBy}</td> */}
         </tr>
       );
     });
@@ -267,19 +285,19 @@ class SearchNid extends Component {
       <table id="data" className="" style={{ fontSize: "11pt" }}>
         <thead>
           <tr>
-            <th>Nid No</th>
-            <th>Date of Birth</th>
-            <th>ecVerificationStatus</th>
+            <th>NID No</th>
+            <th>DOB</th>
+            <th>Status</th>
             <th>Name</th>
             <th>Father Name</th>
             <th>Mother Name</th>
             <th>Place of Birth</th>
             <th>Blood Group</th>
             <th>Address</th>
-            <th>Issue Date</th>          
-            <th>NID Image</th>
-            <th>createDate</th>
-            <th>createdBy</th>
+            {/* <th>Issue Date</th> */}
+            <th style={{textAlign: "center"}}>NID Image</th>
+            {/* <th>createDate</th>
+            <th>createdBy</th> */}
           </tr>
         </thead>
         <tbody>{this.renderTableData()}</tbody>

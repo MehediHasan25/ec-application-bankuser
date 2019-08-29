@@ -34,6 +34,7 @@ class UserForm extends Component {
     ecVerificationStatus: "",
     requestRef: "native-application",
     isEnable: false
+    
   };
 
   UNSAFE_componentWillMount() {
@@ -104,6 +105,8 @@ class UserForm extends Component {
           return;
       }
 
+     
+
 
     const config = {
       headers: {
@@ -130,7 +133,9 @@ class UserForm extends Component {
     };
 
     //console.log(obj);
-
+    if(rIndex === "" && rThump === "" && lIndex === "" && lThump === ""){
+      alert("Please Provide Finger Print");
+    } else{
     axios
       .post(eKycVerification, obj, config)
       .then(res => {
@@ -181,6 +186,7 @@ class UserForm extends Component {
           alert(err.message);
         }
       });
+    }
 
     // this.setState({
     //   name: "",
@@ -199,6 +205,7 @@ class UserForm extends Component {
     //   issueDate: "",
     //   address: ""
     // });
+
   };
 
   handleClick = e => {

@@ -160,7 +160,7 @@ class PendingList extends Component {
           {/* <td id={ecVerStatusTdId}>{ecVerificationStatus}</td> */}
           <td id={ecVerStatusTdId}>{statusConverter(ecVerificationStatus)}</td>
           <td>{name}</td>
-          <td>
+          <td style={{textAlign: "center"}}>
             <button
               type="button"
               onClick={() => this.onImageId(_id)}
@@ -207,7 +207,7 @@ class PendingList extends Component {
               " - " +
               new Date(createDate).toLocaleTimeString()}
           </td>
-          <td>
+          <td style={{textAlign: "center"}}>
             <button
               type="button"
               onClick={() => this.onTableId(_id, ecVerStatusTdId)}
@@ -304,24 +304,24 @@ class PendingList extends Component {
               marginTop: "50px"
             }}
           >
-            <h2>
+            <h4>
               <i className="fas fa-user-check"></i>&nbsp;Pending User
-            </h2>
+            </h4>
           </div>
           <div className="row ">
             {/* Start Content*/}
 
-            <table id="data">
+            <table id="data" style={{ fontSize: "11pt" }}>
               <thead>
                 <tr>
                  
-                  <th>Nid No</th>
-                  <th>Date of Birth</th>
-                  <th>ecVerificationStatus</th>
+                  <th>NID No</th>
+                  <th>DOB</th>
+                  <th>Status</th>
                   <th>Name</th>
-                  <th>NID Image</th>
-                  <th>createDate</th>
-                  <th>Action</th>
+                  <th style={{textAlign: "center"}}>NID Image</th>
+                  <th>Create Date</th>
+                  <th style={{textAlign: "center"}}>Action</th>
                 </tr>
               </thead>
               <tbody>{this.renderTableData()}</tbody>
