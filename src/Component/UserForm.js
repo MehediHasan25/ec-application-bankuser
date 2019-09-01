@@ -1,6 +1,6 @@
 import React, { Component } from "react";
-import DayPickerInput from "react-day-picker/DayPickerInput";
-import "react-day-picker/lib/style.css";
+//import DayPickerInput from "react-day-picker/DayPickerInput";
+//import "react-day-picker/lib/style.css";
 //import dateFormatConverter from "../Utils/dateFormatConverter";
 import "./css/sidebar.css";
 import { Link, Redirect } from "react-router-dom";
@@ -8,6 +8,10 @@ import { Link, Redirect } from "react-router-dom";
 import { eKycVerification } from "../Url/User";
 import axios from "axios";
 import { checkValidation } from "../Utils/routeControl";
+import moment from "moment";
+import {formatDate} from "../Utils/dateFormatConverter"
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
 
 class UserForm extends Component {
   state = {
@@ -34,7 +38,6 @@ class UserForm extends Component {
     ecVerificationStatus: "",
     requestRef: "native-application",
     isEnable: false
-    
   };
 
   UNSAFE_componentWillMount() {
@@ -70,7 +73,7 @@ class UserForm extends Component {
     //  console.log("jjjjj",lIndex);
     // console.log(name);
     // console.log(nidNo);
-    // console.log(dob);
+     console.log(dob);
     // console.log(fatherName);
     // console.log(motherName);
     // console.log(pob);
@@ -80,33 +83,29 @@ class UserForm extends Component {
     // console.log("image Front",imageFront);
     // console.log("type",imageFrontType);
 
-     if (nidNo.length < 10) {
-            this.getNidNoError = alert("NID No must be 10, 13 & 17 digits");
-            this.setState({ nidNoValidation: true });
-            return;
-        } else if (nidNo.length >= 11 && nidNo.length <= 12) {
-            this.getNidNoError = alert("NID No must be 10, 13 & 17 digits");
-            this.setState({ nidNoValidation: true });
-            return;
-        }
-        else if (nidNo.length >= 14 && nidNo.length <= 16) {
-            this.getNidNoError = alert("NID No must be 10, 13 & 17 digits");
-            this.setState({ nidNoValidation: true });
-            return;
-        } else if (nidNo.length > 17) {
-            this.getNidNoError = alert("NID No must be 10, 13 & 17 digits");
-            this.setState({ nidNoValidation: true });
-            return;
-        }
+    if (nidNo.length < 10) {
+      this.getNidNoError = alert("NID No must be 10, 13 & 17 digits");
+      this.setState({ nidNoValidation: true });
+      return;
+    } else if (nidNo.length >= 11 && nidNo.length <= 12) {
+      this.getNidNoError = alert("NID No must be 10, 13 & 17 digits");
+      this.setState({ nidNoValidation: true });
+      return;
+    } else if (nidNo.length >= 14 && nidNo.length <= 16) {
+      this.getNidNoError = alert("NID No must be 10, 13 & 17 digits");
+      this.setState({ nidNoValidation: true });
+      return;
+    } else if (nidNo.length > 17) {
+      this.getNidNoError = alert("NID No must be 10, 13 & 17 digits");
+      this.setState({ nidNoValidation: true });
+      return;
+    }
 
-        if (dob === '') {
-          this.getNidDobError = alert("Date of Birth is empty");
-          this.setState({ dobValidation: true });
-          return;
-      }
-
-     
-
+    if (dob === "") {
+      this.getNidDobError = alert("Date of Birth is empty");
+      this.setState({ dobValidation: true });
+      return;
+    }
 
     const config = {
       headers: {
@@ -133,59 +132,56 @@ class UserForm extends Component {
     };
 
     //console.log(obj);
-    if(rIndex === "" && rThump === "" && lIndex === "" && lThump === ""){
+    if (rIndex === "" && rThump === "" && lIndex === "" && lThump === "") {
       alert("Please Provide Finger Print");
-    } else{
-    axios
-      .post(eKycVerification, obj, config)
-      .then(res => {
-        //console.log(res);
-        try {
-          let ecStatus = res.data.ecVerificationStatus;
-          if(ecStatus === "v") alert("Successfully Verified");
-          else if(ecStatus === "p") alert("Verification is Pending");
-          else if(ecStatus === "n") alert("Not Verified");
-        }
-        catch(ex) {
-
-        }
-        this.setState({
-          name: "",
-          nidNo: "",
-          dob: "",
-          rIndex: "",
-          rThump: "",
-          lIndex: "",
-          lThump: "",
-          fatherName: "",
-          motherName: "",
-          pob: "",
-          imageFront: "",
-          imageFrontType: "",
-          bloodGroup: "",
-          issueDate: "",
-          address: ""
-        });
-        document.getElementById("InputFile").value = "";
-      })
-      .catch(err => {
-        if (err.response) {
-          if (err.response.status === 400 || err.response.status === 401) {
-            console.log(err.response.data);
-            alert(err.response.data.message);
-          } else if (err.response.status === 404) {
-            alert("Not Found");
-          } else if (err.response.status === 500) {
-            alert(err.response.data.message);
+    } else {
+      axios
+        .post(eKycVerification, obj, config)
+        .then(res => {
+          //console.log(res);
+          try {
+            let ecStatus = res.data.ecVerificationStatus;
+            if (ecStatus === "v") alert("Successfully Verified");
+            else if (ecStatus === "p") alert("Verification is Pending");
+            else if (ecStatus === "n") alert("Not Verified");
+          } catch (ex) {}
+          this.setState({
+            name: "",
+            nidNo: "",
+            dob: "",
+            rIndex: "",
+            rThump: "",
+            lIndex: "",
+            lThump: "",
+            fatherName: "",
+            motherName: "",
+            pob: "",
+            imageFront: "",
+            imageFrontType: "",
+            bloodGroup: "",
+            issueDate: "",
+            address: ""
+          });
+          document.getElementById("InputFile").value = "";
+        })
+        .catch(err => {
+          if (err.response) {
+            if (err.response.status === 400 || err.response.status === 401) {
+              console.log(err.response.data);
+              alert(err.response.data.message);
+            } else if (err.response.status === 404) {
+              alert("Not Found");
+            } else if (err.response.status === 500) {
+              alert(err.response.data.message);
+            }
+          } else if (err.request) {
+            console.log(err.request);
+            alert("Error Connectiong");
+          } else {
+            console.log("Error", err.message);
+            alert(err.message);
           }
-        } else if (err.request) {
-          console.log(err.request);
-          alert("Error Connectiong");
-        } else {
-          console.log("Error", err.message);
-          alert(err.message);
-        }
-      });
+        });
     }
 
     // this.setState({
@@ -205,7 +201,6 @@ class UserForm extends Component {
     //   issueDate: "",
     //   address: ""
     // });
-
   };
 
   handleClick = e => {
@@ -284,19 +279,20 @@ class UserForm extends Component {
   };
 
   onChangeName = e => this.setState({ name: e.target.value });
-  onChangeNidNo = e => this.setState({ nidNo: e.target.value, nidNoValidation: true });
+  onChangeNidNo = e =>
+    this.setState({ nidNo: e.target.value, nidNoValidation: true });
   onChangeDob = e => this.setState({ dob: e.target.value });
-  handleDayChange = (selectedDay, modifiers, dayPickerInput) => {
-    const input = dayPickerInput.getInput();
-    //  console.log(typeof (input.value));
-    //  console.log(input.value)
-    const date = input.value;
-    try {
-      this.setState({ dob: date });
-    } catch (ex) {
-      // console.log(ex);
-    }
-  };
+  // handleDayChange = (selectedDay, modifiers, dayPickerInput) => {
+  //   const input = dayPickerInput.getInput();
+  //   //  console.log(typeof (input.value));
+  //   //  console.log(input.value)
+  //   const date = input.value;
+  //   try {
+  //     this.setState({ dob: date });
+  //   } catch (ex) {
+  //     // console.log(ex);
+  //   }
+  // };
 
   logout = e => {
     sessionStorage.clear();
@@ -334,6 +330,7 @@ class UserForm extends Component {
   };
 
   render() {
+   // console.log(formatDate(this.state.dob));
     let sessionName = sessionStorage.getItem("username");
 
     let cv = checkValidation(
@@ -362,7 +359,6 @@ class UserForm extends Component {
           </button>
 
           <div className="collapse navbar-collapse" id="navbarCollapse">
-           
             <div className="navbar-nav ml-auto">
               <Link
                 to="#"
@@ -385,7 +381,6 @@ class UserForm extends Component {
           </div>
         </nav>
 
-        
         <div className="sidebar shadow" style={{ backgroundColor: "#8f8e8e" }}>
           <Link className="active" to="/dashboard">
             Home &nbsp;&nbsp;
@@ -433,7 +428,11 @@ class UserForm extends Component {
                 <div className="card-body">
                   <form onSubmit={this.onSubmit}>
                     <div className="form-group">
-                    <i style={{ color: 'red', textAlign: "center" }}>{this.state.nidNoValidation === true ? this.getNidNoError : ""}</i>
+                      <i style={{ color: "red", textAlign: "center" }}>
+                        {this.state.nidNoValidation === true
+                          ? this.getNidNoError
+                          : ""}
+                      </i>
                       <input
                         type="text"
                         className="form-control"
@@ -444,7 +443,7 @@ class UserForm extends Component {
                       />
                     </div>
 
-                    <div className="form-group d-flex justify-content-between">
+                    {/* <div className="form-group d-flex justify-content-between">
                       <div className="">
                         <label htmlFor="dob">Date of Birth:</label>
                       </div>
@@ -453,6 +452,28 @@ class UserForm extends Component {
                         <DayPickerInput
                           onDayChange={this.handleDayChange}
                           value={this.state.dob}
+                        />
+                      </div>
+                    </div> */}
+
+                    <div className="form-group d-flex justify-content-between">
+                      <div className="">
+                        <label htmlFor="dob">Date of Birth:</label>
+                      </div>
+                      <div className="">
+                        <i style={{ color: "red", textAlign: "center" }}>
+                          {this.state.dobValidation === true
+                            ? this.getNidDobError
+                            : ""}
+                        </i>
+                        <DatePicker
+                           placeholderText="DD-MM-YYYY"
+                          selected={this.state.dob}
+                          dateFormat="dd-MM-yyyy"
+                          onChange={d => {
+                            this.setState({ dob: d });
+                          }}
+                      
                         />
                       </div>
                     </div>
